@@ -163,7 +163,7 @@ Se ejecutan en orden desde la raíz del proyecto con `source("scripts/NN_nombre.
 | `04` | Descarga del nivel de agua mediante la API de Hidromet | `data/raw/hidromet_api/` |
 | `05` | Descarga de la lluvia mediante la API de Meteo Palacio | `data/raw/meteo_palacio_api/` |
 | `06` | Prepara la zona de estudio y el núcleo del Parque Nacional | `zona_estudio_donana.gpkg`, `nucleo_parque_nacional_donana.gpkg` |
-| `07` | Consulta el catálogo de escenas Sentinel-2 | `data/raw/sentinel2_catalogo/` |
+| `07` | Consulta el catálogo de escenas Sentinel-2 | `Consulta el catálogo de escenas Sentinel-2 y elige las fechas` |
 | `08` | Prueba del cubo de datos y de la detección de agua | `data/processed/sentinel2_prueba/` |
 | `09` | Genera la serie temporal Sentinel-2 con las clases de agua por fecha | `data/processed/sentinel2_serie/estadisticas_por_fecha.csv` |
 | `10` | Genera la máscara de marisma y calcula la superficie inundada | `mascara_marisma.tif`, `superficie_inundada_marisma.csv`, figuras |
