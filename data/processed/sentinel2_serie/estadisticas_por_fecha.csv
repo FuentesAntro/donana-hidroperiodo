@@ -1,0 +1,89 @@
+"fecha","figura","ha_zona","pct_valido","ha_agua","pct_agua"
+"2024-10-27","Parque Nacional",53375,62.5,829,2.5
+"2024-10-27","Parque Natural",68161,59.2,2596,6.4
+"2024-10-27","Espacio Natural",127575,60.3,5952,7.7
+"2024-10-27","Zona de protección del Parque Nacional",6718,55.1,2528,68.4
+"2024-11-06","Parque Nacional",53375,99.9,3138,5.9
+"2024-11-06","Parque Natural",68161,100,5584,8.2
+"2024-11-06","Espacio Natural",127575,99.9,13422,10.5
+"2024-11-06","Zona de protección del Parque Nacional",6718,99.3,4700,70.4
+"2024-12-21","Parque Nacional",53375,99.9,2072,3.9
+"2024-12-21","Parque Natural",68161,99.9,5376,7.9
+"2024-12-21","Espacio Natural",127575,99.9,12151,9.5
+"2024-12-21","Zona de protección del Parque Nacional",6718,99.8,4705,70.2
+"2025-01-15","Parque Nacional",53375,100,1847,3.5
+"2025-01-15","Parque Natural",68161,100,5295,7.8
+"2025-01-15","Espacio Natural",127575,99.9,11798,9.3
+"2025-01-15","Zona de protección del Parque Nacional",6718,98.9,4657,70.1
+"2025-02-04","Parque Nacional",53375,100,11344,21.3
+"2025-02-04","Parque Natural",68161,99.9,7363,10.8
+"2025-02-04","Espacio Natural",127575,99.9,23392,18.4
+"2025-02-04","Zona de protección del Parque Nacional",6718,99.2,4685,70.3
+"2025-03-26","Parque Nacional",53375,90.9,24607,50.7
+"2025-03-26","Parque Natural",68161,79.2,11678,21.6
+"2025-03-26","Espacio Natural",127575,84.2,39977,37.2
+"2025-03-26","Zona de protección del Parque Nacional",6718,80.8,3692,68
+"2025-03-31","Parque Nacional",53375,100,25097,47
+"2025-03-31","Parque Natural",68161,100,10472,15.4
+"2025-03-31","Espacio Natural",127575,100,40253,31.6
+"2025-03-31","Zona de protección del Parque Nacional",6718,99.6,4684,70
+"2025-05-25","Parque Nacional",53375,100,10434,19.5
+"2025-05-25","Parque Natural",68161,100,5593,8.2
+"2025-05-25","Espacio Natural",127575,100,20798,16.3
+"2025-05-25","Zona de protección del Parque Nacional",6718,100,4771,71
+"2025-06-21","Parque Nacional",53375,95.3,7211,14.2
+"2025-06-21","Parque Natural",68161,97.8,4766,7.1
+"2025-06-21","Espacio Natural",127575,95.9,15505,12.7
+"2025-06-21","Zona de protección del Parque Nacional",6718,81.1,3527,64.8
+"2025-07-21","Parque Nacional",53375,100,3902,7.3
+"2025-07-21","Parque Natural",68161,100,4200,6.2
+"2025-07-21","Espacio Natural",127575,100,12865,10.1
+"2025-07-21","Zona de protección del Parque Nacional",6718,99.9,4763,71
+"2025-08-13","Parque Nacional",53375,99.9,1838,3.4
+"2025-08-13","Parque Natural",68161,99.9,3784,5.6
+"2025-08-13","Espacio Natural",127575,99.9,10267,8.1
+"2025-08-13","Zona de protección del Parque Nacional",6718,99.1,4645,69.8
+"2025-08-30","Parque Nacional",53375,100,765,1.4
+"2025-08-30","Parque Natural",68161,100,3724,5.5
+"2025-08-30","Espacio Natural",127575,100,9206,7.2
+"2025-08-30","Zona de protección del Parque Nacional",6718,99.8,4716,70.3
+"2025-10-02","Parque Nacional",53375,100,228,0.4
+"2025-10-02","Parque Natural",68161,100,3520,5.2
+"2025-10-02","Espacio Natural",127575,100,8486,6.7
+"2025-10-02","Zona de protección del Parque Nacional",6718,99.9,4738,70.6
+"2025-11-18","Parque Nacional",53375,99.9,3036,5.7
+"2025-11-18","Parque Natural",68161,99.9,6062,8.9
+"2025-11-18","Espacio Natural",127575,99.9,13870,10.9
+"2025-11-18","Zona de protección del Parque Nacional",6718,99.8,4775,71.2
+"2025-11-26","Parque Nacional",53375,100,2616,4.9
+"2025-11-26","Parque Natural",68161,99.9,4938,7.3
+"2025-11-26","Espacio Natural",127575,99.9,12276,9.6
+"2025-11-26","Zona de protección del Parque Nacional",6718,99.8,4721,70.5
+"2026-01-10","Parque Nacional",53375,99.7,9105,17.1
+"2026-01-10","Parque Natural",68161,99.1,7651,11.3
+"2026-01-10","Espacio Natural",127575,99.4,21483,16.9
+"2026-01-10","Zona de protección del Parque Nacional",6718,99.7,4733,70.7
+"2026-02-14","Parque Nacional",53375,99.6,27548,51.8
+"2026-02-14","Parque Natural",68161,99.6,11972,17.6
+"2026-02-14","Espacio Natural",127575,99.4,44048,34.7
+"2026-02-14","Zona de protección del Parque Nacional",6718,96,4529,70.2
+"2026-03-16","Parque Nacional",53375,99.5,21101,39.7
+"2026-03-16","Parque Natural",68161,99.8,8036,11.8
+"2026-03-16","Espacio Natural",127575,99.7,33896,26.7
+"2026-03-16","Zona de protección del Parque Nacional",6718,99.9,4760,70.9
+"2026-03-26","Parque Nacional",53375,100,18157,34
+"2026-03-26","Parque Natural",68161,99.9,7676,11.3
+"2026-03-26","Espacio Natural",127575,99.9,30583,24
+"2026-03-26","Zona de protección del Parque Nacional",6718,99.9,4750,70.8
+"2026-05-20","Parque Nacional",53375,100,6759,12.7
+"2026-05-20","Parque Natural",68161,100,5064,7.4
+"2026-05-20","Espacio Natural",127575,100,16539,13
+"2026-05-20","Zona de protección del Parque Nacional",6718,99.9,4716,70.2
+"2026-06-09","Parque Nacional",53375,100,4693,8.8
+"2026-06-09","Parque Natural",68161,100,4585,6.7
+"2026-06-09","Espacio Natural",127575,99.9,14020,11
+"2026-06-09","Zona de protección del Parque Nacional",6718,99.7,4743,70.8
+"2026-06-29","Parque Nacional",53375,100,3016,5.7
+"2026-06-29","Parque Natural",68161,100,3866,5.7
+"2026-06-29","Espacio Natural",127575,100,11634,9.1
+"2026-06-29","Zona de protección del Parque Nacional",6718,99.9,4751,70.8
