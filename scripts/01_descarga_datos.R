@@ -214,7 +214,7 @@ for (id in names(fuentes)) {
 
 # Validación de todo lo que haya en data/raw
 csvs <- dir_ls(DIR_RAW, recurse = TRUE, regexp = "\\.csv$")
-csvs <- csvs[path_file(csvs) != "DESCARGAS_LOG.csv"]
+csvs <- csvs[!path_file(csvs) %in% c("DESCARGAS_LOG.csv", "VALIDACION.csv")]
 if (length(csvs) > 0) {
   msg("Validando ", length(csvs), " archivo(s)...")
   informe <- dplyr::bind_rows(lapply(csvs, validar_csv))
