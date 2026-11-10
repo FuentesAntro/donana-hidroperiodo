@@ -38,7 +38,6 @@
 | `data/processed/hidromet_cancela_millan_nivel_diario.csv` | 03 | Sí |
 | `data/processed/lluvia_nivel_diario.csv` (unión de lluvia y nivel, con columna `estado`) | 03 | Sí |
 | `data/processed/zona_estudio_donana.gpkg`, `donana_figuras.gpkg`, `nucleo_parque_nacional_donana.gpkg` | 06 | Sí |
-| `data/raw/sentinel2_catalogo/sentinel2_l2a_escenas_*.csv` (catálogo de escenas) | 07 | Sí |
 | `data/processed/sentinel2_serie/estadisticas_por_fecha.csv` | 09 | Sí |
 | `data/processed/sentinel2_serie/superficie_inundada_marisma.csv` | 10 | Sí |
 | `data/processed/mascara_marisma.tif` | 10 | Revisar el tamaño antes de subirlo |
