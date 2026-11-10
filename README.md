@@ -215,7 +215,7 @@ Las citas completas, las fechas de descarga y las condiciones de reutilización 
 
 ---
 
-## 🔭 Próximos pasos
+## Próximos pasos
 
 - Densificar la serie con una fecha cada 10 días entre enero y abril para ver cuándo sube la marisma.
 - Probar la máscara con un umbral de 0,05 en lugar de 0,10 y comprobar si cambia la curva.
