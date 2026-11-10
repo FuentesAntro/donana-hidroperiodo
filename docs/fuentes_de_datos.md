@@ -22,8 +22,8 @@
 
 - ICTS-RBD / EBD-CSIC (2026). Datos hidrometeorológicos de la red de monitorización de la Reserva Biológica de Doñana. Hidromet. Estación Biológica de Doñana (EBD-CSIC). Reserva Biológica de Doñana (ICTS-RBD). https://datos-automaticos.icts-donana.es/ (fecha de descarga: 2026-11-09)
 - ICTS-RBD / EBD-CSIC (2026). Datos meteorológicos de la Estación Manual del Palacio de Doñana. Meteo Palacio. Estación Biológica de Doñana (EBD-CSIC). Reserva Biológica de Doñana (ICTS-RBD). https://meteorologia-palacio.icts-donana.es/ (fecha de descarga: 2026-11-09)
-- REDIAM, Junta de Andalucía. Espacios Naturales Protegidos de Andalucía (EENNPP), versión 2026_03. (PENDIENTE: copiar la cita exacta de la ficha de la REDIAM, enlace en la tabla; fecha de descarga: 2026-11-10)
-- Copernicus Sentinel-2 L2A, ESA. Accedido a través de Microsoft Planetary Computer. (PENDIENTE: copiar la redacción oficial de la atribución desde la ficha de Copernicus o Planetary Computer; fecha de descarga: 2026-11-10)
+- REDIAM, Junta de Andalucía. Espacios Naturales Protegidos de Andalucía (EENNPP), versión 2026_03. (REDIAM, Junta de Andalucía. Espacios Naturales Protegidos de Andalucía (EENNPP), versión 2026_03. https://portalrediam.cica.es/geonetwork/srv/api/records/6608ad36-f7a0-4b93-916f-ceb875459e57 (fecha de descarga: 2026-11-10)
+- Copernicus Sentinel-2 L2A, ESA. Accedido a través de Microsoft Planetary Computer. (Contiene datos de Copernicus Sentinel-2 (ESA), modificados, accedidos a través de Microsoft Planetary Computer (fecha de descarga: 2026-11-10)
 
 ## Condiciones de reutilización (Aviso Legal ICTS-Doñana)
 
