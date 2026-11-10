@@ -1,3 +1,5 @@
 fuente,archivo,url,fecha_descarga,bytes,sha256,licencia
 Hidromet,data/raw/hidromet/cancela_millan_waterLevel_diario.csv,descarga manual desde el portal,2026-11-09,63563,b30c76cd16e2f1e2e68a99225645e386046e86559e04c324e5f8732d98cbcc1d,CC BY 4.0
 Meteo Palacio,data/raw/meteo_palacio/palacio_precipitacion_diaria.csv,descarga manual desde el portal,2026-11-09,283464,82035c57fb36d7315d0bbf2a04ff1fcc857e1a4ce5e1497cb34eb784f61f1a5f,CC BY 4.0
+Hidromet (API),data/raw/hidromet_api/hidromet_cancela_millan_waterLevel_daily_2026-11-10_p1.json,https://datos-automaticos.icts-donana.es/api/v1/daily/?place=8437&variable=waterLevel&acronym=WaterLevelMestech&calc_procedure_method=Average&aggr_method=Average&start_date=2022-01-01&end_date=2026-11-09&page=1&page_size=5000,2026-11-10,90456,79ca502c3f9ca33d0a8f5096dcb72116871f2f5ccb4b4502ee1ef331d19fb194,CC BY 4.0
+Hidromet (API),data/raw/hidromet_api/hidromet_cancela_millan_waterLevel_daily_2026-11-10.csv,https://datos-automaticos.icts-donana.es/api/v1/daily/ (convertido a CSV),2026-11-10,47856,33ccafc618cbbca455235a13dad55bc14d9d72501330af4350926d0f0b24d7a0,CC BY 4.0
