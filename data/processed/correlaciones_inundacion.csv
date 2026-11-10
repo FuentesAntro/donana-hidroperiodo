@@ -1,0 +1,8 @@
+"variable","n","rho","p"
+"lluvia_7d",21,0.32,0.1553
+"lluvia_15d",21,0.53,0.0132
+"lluvia_30d",21,0.58,0.0064
+"lluvia_60d",21,0.72,3e-04
+"lluvia_90d",21,0.76,1e-04
+"lluvia_ano",21,0.19,0.3989
+"nivel_limpio_m",12,0.94,0
