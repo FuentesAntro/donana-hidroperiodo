@@ -157,15 +157,17 @@ Se ejecutan en orden desde la raíz del proyecto con `source("scripts/NN_nombre.
 
 | Script | Qué hace | Salida principal |
 |---|---|---|
-| 01, 02, 04, 05 | *(completar con la descripción de cada script)* | |
+| `01` | Descarga de datos | `data/raw/` |
+| `02` | Limpieza del nivel de agua con marcas de calidad | `data/processed/hidromet_cancela_millan_nivel_diario.csv` |
 | `03` | Une lluvia y nivel diarios, con columna de estado | `data/processed/lluvia_nivel_diario.csv` |
+| `04` | Descarga del nivel de agua mediante la API de Hidromet | `data/raw/hidromet_api/` |
+| `05` | Descarga de la lluvia mediante la API de Meteo Palacio | `data/raw/meteo_palacio_api/` |
 | `06` | Prepara la zona de estudio y el núcleo del Parque Nacional | `zona_estudio_donana.gpkg`, `nucleo_parque_nacional_donana.gpkg` |
 | `07` | Consulta el catálogo de escenas Sentinel-2 | `data/raw/sentinel2_catalogo/` |
 | `08` | Prueba del cubo de datos y de la detección de agua | `data/processed/sentinel2_prueba/` |
-| `09` | Serie temporal Sentinel-2: clases de agua por fecha | `data/processed/sentinel2_serie/estadisticas_por_fecha.csv` |
-| `10` | Máscara de marisma y curva de superficie inundada | `mascara_marisma.tif`, `superficie_inundada_marisma.csv`, figuras |
-| `11` | Cruce de la inundación con lluvia y nivel | `cruce_inundacion_lluvia_nivel.csv`, `correlaciones_inundacion.csv` |
-
+| `09` | Genera la serie temporal Sentinel-2 con las clases de agua por fecha | `data/processed/sentinel2_serie/estadisticas_por_fecha.csv` |
+| `10` | Genera la máscara de marisma y calcula la superficie inundada | `mascara_marisma.tif`, `superficie_inundada_marisma.csv`, figuras |
+| `11` | Cruza los datos de inundación con lluvia y nivel de agua | `cruce_inundacion_lluvia_nivel.csv`, `correlaciones_inundacion.csv` |
 ---
 
 ## Cómo reproducirlo
