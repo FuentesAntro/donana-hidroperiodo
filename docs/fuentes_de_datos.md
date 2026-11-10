@@ -2,8 +2,7 @@
 
 | Dato | Fuente | Enlace | Fecha de descarga | Licencia | ¿Se sube al repo? |
 |---|---|---|---|---|---|
-| Nivel de agua medio diario, estación Cancela Millán (2022-01-01 a 2026-11-08) | ICTS-RBD / EBD-CSIC, Hidromet | https://datos-automaticos.icts-donana.es/ | 2026-11-09 | CC BY 4.0 | Sí |
-| Precipitación diaria, estación Palacio (1978-09-01 a 2026-11-08) | ICTS-RBD / EBD-CSIC, Meteo Palacio | https://meteorologia-palacio.icts-donana.es/ | 2026-11-09 | CC BY 4.0 | Sí |
+| Nivel de agua medio diario, estación Cancela Millán (2022-01-01 a 2026-11-09) | ICTS-RBD / EBD-CSIC, Hidromet (API) | https://datos-automaticos.icts-donana.es/api/v1/ | 2026-11-10 | CC BY 4.0 | Sí || Precipitación diaria, estación Palacio (1978-09-01 a 2026-11-08) | ICTS-RBD / EBD-CSIC, Meteo Palacio | https://meteorologia-palacio.icts-donana.es/ | 2026-11-09 | CC BY 4.0 | Sí |
 | Censos de aves acuáticas | ICTS-Doñana, portal de censos | Enlace desde https://icts-donana.csic.es/ | (pendiente) | Revisar | No, hasta revisar |
 | Imágenes Sentinel-2 L2A | Copernicus / Planetary Computer | (pendiente) | (pendiente) | (pendiente) | No |
 | Límite de la zona de estudio | REDIAM, límites RENPA (Parque Nacional) | https://portalrediam.cica.es/geonetwork/srv/api/records/6608ad36-f7a0-4b93-916f-ceb875459e57 | (pendiente) | Revisar en la ficha | No, hasta revisar |
