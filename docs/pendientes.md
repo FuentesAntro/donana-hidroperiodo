@@ -9,3 +9,5 @@ Hecho: descarga y registro de Hidromet (Cancela Millan) y Meteo Palacio; limpiez
 5. Licencia del portal de censos de aves (icts-donana.csic.es, Acceso a informacion, Repositorios de datos).
 6. Imagenes Sentinel-2 y superficie inundada.
 7. Poner el titulo final del proyecto con el periodo real (2018-2026 o el que permitan los datos).
+
+- 2026-11-09: enviada consulta a ICTS-Donana por el salto del sensor (punto 2). Pendiente de respuesta.
