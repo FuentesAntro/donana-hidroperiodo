@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24519541.svg)](https://doi.org/10.5281/zenodo.24519541)
+
 # Inundación de la marisma de Doñana desde el espacio
 
 **Una serie temporal de Sentinel-2 (2024-2026) para medir cuánta marisma se inunda, validada con un sensor de nivel de agua en el campo y contrastada con la lluvia.**
