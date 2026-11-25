@@ -2,235 +2,637 @@
 
 # Inundación de la marisma de Doñana desde el espacio
 
-**Una serie temporal de Sentinel-2 (2024-2026) para medir cuánta marisma se inunda, validada con un sensor de nivel de agua en el campo y contrastada con la lluvia.**
+### Doñana Hydroperiod — Remote Sensing & Environmental Data Science
 
-![R](https://img.shields.io/badge/R-analysis-276DC3?logo=r&logoColor=white)
+**Análisis de series temporales Sentinel-2 (2024–2026), integración de datos hidrometeorológicos y evaluación exploratoria de la calidad de los sensores ambientales de Doñana mediante R.**
+
+![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
 ![Sentinel-2](https://img.shields.io/badge/Sentinel--2-L2A-0B3D91)
-![Datos](https://img.shields.io/badge/datos-abiertos-2E8B57)
-![Estado](https://img.shields.io/badge/estado-serie%20piloto-orange)
+![GIS](https://img.shields.io/badge/GIS-Spatial%20Analysis-228B22)
+![Data Quality](https://img.shields.io/badge/Data-Quality-0077B5)
+![License](https://img.shields.io/badge/Code%20License-MIT-blue)
+![Open Science](https://img.shields.io/badge/Open-Science-orange)
+![Status](https://img.shields.io/badge/Estado-Serie%20piloto-orange)
 
 <p align="center">
-  <img src="figures/curva_inundacion.png" alt="Curva de inundación de la marisma de Doñana" width="85%">
+  <img src="figures/curva_inundacion.png" alt="Curva de inundación de la marisma de Doñana" width="90%">
 </p>
 
 ---
 
-## En una mirada
+## Resumen del proyecto
 
-| | |
+Este proyecto desarrolla un flujo de trabajo para monitorizar la inundación estacional de la marisma del Parque Nacional de Doñana mediante imágenes satelitales, análisis espacial y datos hidrometeorológicos.
+
+Integra técnicas de teledetección, programación científica, análisis estadístico, control de calidad de datos ambientales y visualización de resultados, con un enfoque orientado a la reproducibilidad y la ciencia abierta.
+
+| Indicador | Resultado |
 |---|---|
-| **Pregunta** | ¿Cuánta marisma del Parque Nacional de Doñana está inundada en cada momento y qué la explica? |
-| **Datos** | Sentinel-2 L2A (ESA) · nivel de agua (Hidromet, Cancela Millán) · lluvia diaria (Meteo Palacio) · límites REDIAM |
-| **Periodo analizado** | 2024-10-27 a 2026-06-29 (serie piloto, 21 fechas útiles) |
-| **Marisma estacional (definida por el proyecto)** | 25.128 ha |
-| **Agua permanente** | 666 ha |
-| **Validación con el sensor de campo** | Spearman **ρ = 0,94** (12 fechas) |
-| **Lluvia que mejor explica la inundación** | Acumulada a **90 días** (correlación 0,76) |
-| **Lenguaje** | R (`terra`, `sf`, `gdalcubes`, `dplyr`, `ggplot2`) |
+| Periodo de la serie satelital | 2024–2026 |
+| Observaciones satelitales útiles | 21 |
+| Resolución espacial | 20 m |
+| Superficie de marisma estacional estimada | 25.128 ha |
+| Superficie de agua permanente estimada | 666 ha |
+| Correlación inundación–nivel de agua | Spearman ρ = 0,94 (n = 12) |
+| Mayor correlación observada con precipitación | ρ = 0,76 (90 días) |
+| Registros originales de Mobrey procesados | 74.017 |
+| Días comparables entre sensores | 249 |
+| Concordancia entre sensores antes de la anomalía | Spearman ρ = 0,9999182 |
+| Scripts de análisis | 12 |
+| Lenguaje principal | R |
+| Repositorio científico | Zenodo |
+| DOI de la versión v1.0.0 | [10.5281/zenodo.24519541](https://doi.org/10.5281/zenodo.24519541) |
+
+> Proyecto independiente de carácter exploratorio. Las superficies estimadas son resultados de la metodología propuesta y no constituyen delimitaciones oficiales.
 
 ---
 
-## Por qué este proyecto
+## Objetivos
 
-La marisma de Doñana es un humedal que cambia por completo a lo largo del año: se seca en verano, se llena con las lluvias y vuelve a secarse. Medir *cuánta* superficie se inunda y *cuándo* es clave para entender el humedal, pero los sensores de campo miden un solo punto y el límite legal de la marisma está en disputa (deslinde).
+- Cuantificar la evolución temporal de la superficie inundada de la marisma.
+- Construir una delimitación funcional de la marisma estacional mediante imágenes Sentinel-2.
+- Analizar la relación entre precipitación acumulada, nivel de agua e inundación.
+- Evaluar la coherencia temporal entre observaciones satelitales y mediciones de campo.
+- Identificar anomalías y discrepancias en series de sensores hidrometeorológicos.
+- Desarrollar procedimientos documentados y reutilizables para el tratamiento de datos ambientales.
 
-Este proyecto propone una alternativa reproducible: usar imágenes de satélite abiertas para construir la curva de superficie inundada y comprobar que cuenta la misma historia que un sensor de campo independiente.
+---
+
+## Contexto
+
+La marisma de Doñana constituye un sistema ambiental dinámico, caracterizado por importantes variaciones estacionales en la superficie inundada.
+
+Su seguimiento mediante observaciones satelitales permite complementar las mediciones puntuales de las estaciones hidrometeorológicas y estudiar la evolución espacial y temporal de la inundación.
+
+Este proyecto combina ambas fuentes de información para explorar su complementariedad y desarrollar procedimientos de análisis que puedan contribuir a la monitorización ambiental.
 
 ---
 
 ## Mapa de la marisma estacional
 
 <p align="center">
-  <img src="figures/mascara_marisma.png" alt="Máscara de marisma del Parque Nacional de Doñana" width="60%">
+  <img src="figures/mascara_marisma.png" alt="Máscara de marisma estacional del Parque Nacional de Doñana" width="65%">
 </p>
 
-El mapa clasifica cada píxel (20 m) del Parque Nacional según la frecuencia con que aparece agua en la serie:
+La clasificación se realiza a partir de la frecuencia de detección de agua de cada píxel de 20 metros.
 
-| Clase | Criterio | Superficie |
-|---|---|---|
-| Casi nunca agua | agua en menos del 10 % de las fechas válidas (dunas, pinar, matorral) | — |
-| **Inundación estacional** | agua entre el 10 % y el 90 % de las fechas válidas | **25.128 ha** |
-| Agua permanente | agua en más del 90 % de las fechas válidas | 666 ha |
+| Clase | Frecuencia de detección de agua | Superficie estimada |
+|---|---|---:|
+| Casi nunca agua | Inferior al 10 % | — |
+| **Inundación estacional** | Entre el 10 % y el 90 % | **25.128 ha** |
+| Agua permanente | Superior al 90 % | 666 ha |
 
-> Las cifras son propias del método, no oficiales. Los umbrales (0,10 y 0,90) son una primera propuesta.
+Los umbrales utilizados constituyen una primera aproximación metodológica y están sujetos a análisis de sensibilidad.
 
 ---
 
-## Método paso a paso
+## Arquitectura metodológica
 
 ```mermaid
-flowchart LR
-    A[Catálogo Sentinel-2<br/>Planetary Computer] --> B[Selección de fechas<br/>1 por ventana de 30 días]
-    B --> C[Cubo de datos<br/>B03, B11, SCL a 20 m]
-    C --> D[Máscara de nubes<br/>con SCL]
-    D --> E[MNDWI > 0<br/>agua / no agua]
-    E --> F[Frecuencia de agua<br/>por píxel]
-    F --> G[Máscara de marisma<br/>estacional]
-    E --> H[Curva de superficie<br/>inundada]
-    G --> H
-    H --> I[Cruce con lluvia<br/>y nivel de agua]
+flowchart TD
+    A[Sentinel-2 L2A] --> B[Selección de escenas]
+    B --> C[Cubo de datos a 20 m]
+    C --> D[Enmascaramiento de nubes y sombras]
+    D --> E[Cálculo del MNDWI]
+    E --> F[Clasificación agua / no agua]
+    F --> G[Frecuencia de inundación]
+    G --> H[Máscara de marisma estacional]
+    F --> I[Serie de superficie inundada]
+    H --> I
+    J[Hidromet] --> K[Control de calidad]
+    L[Meteo Palacio] --> M[Precipitación acumulada]
+    K --> N[Integración y análisis estadístico]
+    M --> N
+    I --> N
+    N --> O[Indicadores ambientales]
+    N --> P[Visualización científica]
+    K --> Q[Contraste Mestech-Mobrey]
 ```
-
-### 1. Zona de estudio
-Se parte del Espacio Natural Doñana (REDIAM, EENNPP versión 2026_03; 127.707 ha) y de su núcleo, el Parque Nacional. Es una **zona de trabajo**, no el deslinde legal de la marisma.
-
-### 2. Selección de escenas
-- Se consulta el catálogo de Sentinel-2 L2A en Microsoft Planetary Computer desde 2022-01-01.
-- El porcentaje de nubes del catálogo es el de la escena entera, no el de Doñana, así que no basta para elegir.
-- Serie piloto: **una fecha por ventana de 30 días**, la de menos nubes. En total, 22 fechas entre 2024-10-27 y 2026-06-29.
-- El catálogo devuelve a veces dos escenas por tesela y fecha; se deduplica al elegir fechas y el cubo toma una de ellas (`aggregation = "first"`).
-
-### 3. Cubo de datos y nubes
-Con `gdalcubes` se construye un cubo con las bandas **B03** (verde), **B11** (infrarrojo de onda corta) y **SCL** (clasificación de escena) a 20 m. Las nubes y sombras se enmascaran con SCL, aceptando solo las clases 2 y 4 a 7.
-
-### 4. Detección de agua
-Se usa el índice MNDWI (Modified Normalized Difference Water Index):
-
-```
-MNDWI = (B03 − B11) / (B03 + B11)      agua si MNDWI > 0
-```
-
-Es un umbral aproximado y no está validado con datos de campo, salvo la comparación con el nivel de Cancela Millán (ver resultados).
-
-### 5. Control de calidad
-Se descartan las fechas con menos del **80 %** de píxeles válidos en el Parque Nacional. De las 22 fechas, queda fuera el 2024-10-27 (62,5 % válido), por lo que se usan **21**.
-
-### 6. Máscara de marisma y curva de inundación
-- Frecuencia de agua por píxel = fechas con agua / fechas válidas (mínimo 5 fechas válidas por píxel).
-- El dominio de marisma estacional son los píxeles del Parque Nacional con frecuencia entre 0,10 y 0,90.
-- Para cada fecha, `% inundado` = píxeles de agua del dominio / píxeles válidos del dominio, y se estima la superficie inundada en hectáreas.
-
-### 7. Cruce con lluvia y nivel
-Se relacionan el % inundado, la lluvia acumulada (ventanas de 7, 30, 60 y 90 días, y desde el inicio del año hidrológico) y el nivel de agua de Cancela Millán, con correlaciones de Spearman.
 
 ---
 
-## Resultados
+## Metodología
 
-### El satélite capta el ciclo anual de la marisma
-- **Otoño seco:** 3.138 ha de agua en el Parque Nacional el 6 de noviembre de 2024.
-- **Subida en invierno:** 11.344 ha el 4 de febrero de 2025.
-- **Pico en primavera:** unas 25.000 ha a finales de marzo de 2025.
-- **Descenso al secarse:** 10.434 ha el 25 de mayo de 2025.
+### 1. Zona de estudio
 
-### Validación con un sensor independiente
-El nivel de agua de Cancela Millán y el % inundado por satélite cuentan la misma historia: **ρ de Spearman = 0,94 (12 fechas)**.
+Se parte del Espacio Natural Doñana, utilizando los límites disponibles en REDIAM (EENNPP, versión 2026_03), con una superficie de referencia de 127.707 hectáreas.
 
-| Nivel de agua (Cancela Millán) | Marisma inundada (Sentinel-2) |
+El análisis se centra en el núcleo correspondiente al Parque Nacional.
+
+La delimitación constituye una zona de trabajo y no pretende establecer el deslinde legal de la marisma.
+
+### 2. Selección de escenas Sentinel-2
+
+- Consulta del catálogo Sentinel-2 L2A mediante Microsoft Planetary Computer.
+- Selección de una fecha por ventana temporal de 30 días, priorizando las escenas con menor nubosidad.
+- Identificación y tratamiento de escenas duplicadas por fecha y tesela.
+- Selección inicial de 22 fechas entre el 27/10/2024 y el 29/06/2026.
+
+### 3. Construcción del cubo de datos
+
+El procesamiento se realiza mediante `gdalcubes`, utilizando:
+
+| Banda | Descripción |
 |---|---|
-| 0,04 – 0,05 m | 5 – 10 % |
-| 0,92 – 0,95 m | 96 – 99 % |
+| B03 | Verde |
+| B11 | Infrarrojo de onda corta |
+| SCL | Scene Classification Layer |
 
-La relación es creciente y se satura en la parte alta. Un sensor de campo y un método de teledetección, sin compartir datos, dan el mismo resultado.
+La resolución espacial de trabajo es de 20 metros.
 
-### La marisma responde a la lluvia del trimestre, no a la de la semana
+Se eliminan nubes y sombras mediante la clasificación SCL, conservando las clases 2 y 4 a 7.
 
-| Ventana de lluvia acumulada | Correlación con el % inundado |
-|---|---|
+### 4. Detección de agua
+
+Se utiliza el Modified Normalized Difference Water Index (MNDWI):
+
+```text
+MNDWI = (B03 - B11) / (B03 + B11)
+```
+
+Criterio inicial de clasificación:
+
+```text
+MNDWI > 0  → Agua
+MNDWI ≤ 0  → No agua
+```
+
+El umbral constituye una aproximación exploratoria y no ha sido calibrado mediante una validación espacial independiente.
+
+### 5. Control de calidad de las observaciones satelitales
+
+Se establece un umbral mínimo del 80 % de píxeles válidos en el Parque Nacional.
+
+La observación correspondiente al 27/10/2024 se descarta por presentar únicamente un 62,5 % de cobertura válida.
+
+**Resultado final: 21 fechas satelitales útiles.**
+
+### 6. Delimitación de la marisma estacional
+
+La frecuencia de inundación se calcula como:
+
+```text
+Frecuencia de agua = Fechas con agua / Fechas válidas
+```
+
+Se exige un mínimo de cinco observaciones válidas por píxel.
+
+La máscara estacional está formada por los píxeles con una frecuencia de inundación comprendida entre 0,10 y 0,90.
+
+### 7. Integración hidrometeorológica
+
+Se integran las estimaciones de superficie inundada con:
+
+- Nivel de agua de Cancela Millán.
+- Precipitación diaria de Meteo Palacio.
+- Precipitación acumulada en diferentes ventanas temporales.
+- Indicadores derivados de la serie satelital.
+
+Las relaciones se estudian mediante correlaciones de Spearman.
+
+---
+
+## Resultados de teledetección
+
+### Evolución de la superficie inundada
+
+| Fecha o periodo | Superficie de agua estimada |
+|---|---:|
+| 6 de noviembre de 2024 | 3.138 ha |
+| 4 de febrero de 2025 | 11.344 ha |
+| Finales de marzo de 2025 | Aproximadamente 25.000 ha |
+| 25 de mayo de 2025 | 10.434 ha |
+
+Las observaciones satelitales reflejan la evolución estacional de la inundación: aumento durante el invierno y la primavera y posterior descenso durante el periodo de desecación.
+
+### Contraste temporal con observaciones de campo
+
+La comparación entre el porcentaje de marisma inundada y el nivel de agua registrado en Cancela Millán presenta una correlación de Spearman de **ρ = 0,94**, calculada sobre 12 fechas comparables.
+
+| Nivel de agua | Porcentaje de marisma inundada |
+|---|---:|
+| 0,04–0,05 m | 5–10 % |
+| 0,92–0,95 m | 96–99 % |
+
+Los resultados muestran una elevada coherencia temporal entre ambas fuentes.
+
+Esta comparación aporta evidencia de asociación entre las observaciones satelitales y el nivel de agua, pero no constituye una validación espacial de la clasificación por píxel.
+
+### Relación con la precipitación acumulada
+
+| Ventana temporal | Correlación de Spearman |
+|---|---:|
 | 7 días | 0,32 |
 | 30 días | 0,58 |
 | 60 días | 0,72 |
 | **90 días** | **0,76** |
-| Desde inicio del año hidrológico | 0,19 |
+| Desde el inicio del año hidrológico | 0,19 |
 
-La lluvia desde el inicio del año hidrológico no sirve: sigue creciendo o se queda fija en verano mientras la marisma se seca.
+La precipitación acumulada durante los 90 días anteriores presenta la mayor correlación observada con la inundación dentro de las ventanas analizadas.
 
-### Hipótesis: lluvia no es igual a inundación
-El 6 de noviembre de 2024 y el 18 de noviembre de 2025 habían caído unos 170 mm en 30 días y la marisma estaba solo al 9-10 %. La inundación llega después, con el terreno ya empapado (en 2025 el pico fue a finales de marzo). Es una interpretación coherente con las curvas, pero **no está comprobada**: faltaría usar datos de suelo o de acuífero.
+Este resultado sugiere la relevancia de los procesos de acumulación hídrica y de las condiciones antecedentes del terreno, aunque no permite establecer relaciones causales.
 
----
+### Hipótesis hidrológica
 
-## Limitaciones
+El 6 de noviembre de 2024 y el 18 de noviembre de 2025 se habían registrado aproximadamente 170 mm de precipitación acumulada durante los 30 días anteriores, mientras que la superficie inundada se situaba únicamente entre el 9 % y el 10 %.
 
-- **Serie piloto.** Con una fecha al mes se pueden perder picos cortos de inundación.
-- **Pocas fechas y datos encadenados.** Con 21 fechas (12 con nivel), las fechas consecutivas se parecen entre sí y los valores p son optimistas. Conviene fijarse en el orden de las correlaciones y en la forma de la curva.
-- **El nivel no es una causa independiente.** Mide el mismo fenómeno que el satélite desde dentro de la marisma. Sirve para validar el método, no para explicar la inundación.
-- **Una sola estación de lluvia y una de nivel.** Palacio y Cancela Millán no están en el mismo punto ni representan toda la marisma.
-- **Dominio definido con las mismas imágenes.** Los picos cercanos al 100 % se deben en parte a cómo se define la marisma estacional.
-- **Umbral MNDWI > 0** sin calibrar con datos de campo.
-- **Calidad de los datos de nivel.** Hueco del 2025-05-14 al 2026-01-15 y valores dudosos desde el 2026-07-04 (el sensor salta de unos 0,03 m a unos 13,5 m); se marcan como dudosos hasta aclarar la causa con la ICTS-Doñana. Los días sin dato de lluvia no se rellenan (6 desde 2022).
-- **Zona de estudio.** El deslinde legal de la marisma está en disputa; este trabajo no pretende fijarlo.
+Una posible interpretación es la influencia de la humedad antecedente del suelo y de los procesos de almacenamiento hídrico.
+
+Esta hipótesis requiere contrastes adicionales con información edáfica e hidrogeológica.
 
 ---
 
-## Scripts
+## Control de calidad de datos ambientales
 
-Se ejecutan en orden desde la raíz del proyecto con `source("scripts/NN_nombre.R")`.
+### Comparación exploratoria de los sensores Mestech y Mobrey
 
-| Script | Qué hace | Salida principal |
-|---|---|---|
-| `01` | Descarga de datos | `data/raw/` |
-| `02` | Limpieza del nivel de agua con marcas de calidad | `data/processed/hidromet_cancela_millan_nivel_diario.csv` |
-| `03` | Une lluvia y nivel diarios, con columna de estado | `data/processed/lluvia_nivel_diario.csv` |
-| `04` | Descarga del nivel de agua mediante la API de Hidromet | `data/raw/hidromet_api/` |
-| `05` | Descarga de la lluvia mediante la API de Meteo Palacio | `data/raw/meteo_palacio_api/` |
-| `06` | Prepara la zona de estudio y el núcleo del Parque Nacional | `zona_estudio_donana.gpkg`, `nucleo_parque_nacional_donana.gpkg` |
-| `07` | Consulta el catálogo de escenas Sentinel-2 | `Consulta el catálogo de escenas Sentinel-2 y elige las fechas` |
-| `08` | Prueba del cubo de datos y de la detección de agua | `data/processed/sentinel2_prueba/` |
-| `09` | Genera la serie temporal Sentinel-2 con las clases de agua por fecha | `data/processed/sentinel2_serie/estadisticas_por_fecha.csv` |
-| `10` | Genera la máscara de marisma y calcula la superficie inundada | `mascara_marisma.tif`, `superficie_inundada_marisma.csv`, figuras |
-| `11` | Cruza los datos de inundación con lluvia y nivel de agua | `cruce_inundacion_lluvia_nivel.csv`, `correlaciones_inundacion.csv` |
----
+Como ampliación del proyecto, se desarrolla un procedimiento de análisis de concordancia entre dos series de nivel de agua de Cancela Millán, procedentes de Hidromet.
 
-## Cómo reproducirlo
+El objetivo es caracterizar la discrepancia observada a partir del 4 de julio de 2026 y documentar posibles incidencias en las series hidrometeorológicas.
 
-```r
-install.packages(c("terra", "sf", "dplyr", "ggplot2", "gdalcubes"))
+<p align="center">
+  <img src="figures/comparacion_mestech_mobrey.png" alt="Comparación de niveles medios diarios Mestech y Mobrey en Cancela Millán" width="100%">
+</p>
 
-source("scripts/09_sentinel2_serie.R")      # unos 1 min 20 s por fecha
-source("scripts/10_mascara_marisma.R")
-source("scripts/11_cruce_inundacion_lluvia_nivel.R")
+### Procesamiento de los datos
+
+| Indicador | Valor |
+|---|---:|
+| Registros originales de Mestech | 1.526 |
+| Registros originales de Mobrey | 74.017 |
+| Marcas temporales repetidas en Mobrey | 40 |
+| Observaciones diarias esperadas en Mobrey | 288 |
+| Cobertura diaria mínima exigida | 80 % |
+| Días comparables antes de la anomalía | 124 |
+| Días comparables después de la anomalía | 125 |
+| Total de días comparables analizados | 249 |
+
+### Flujo de control de calidad
+
+```mermaid
+flowchart TD
+    A[Datos originales Mestech] --> B[Comprobación de fechas]
+    C[Datos originales Mobrey] --> D[Identificación de duplicados]
+    D --> E[Agregación por instante]
+    E --> F[Agregación diaria UTC]
+    F --> G[Cálculo de cobertura diaria]
+    B --> H[Integración por fecha]
+    G --> H
+    H --> I[Selección de días comparables]
+    I --> J[Separación temporal]
+    J --> K[Periodo anterior a la anomalía]
+    J --> L[Periodo posterior a la anomalía]
+    K --> M[Métricas de concordancia]
+    L --> M
+    M --> N[Tablas y visualizaciones]
 ```
 
-- El script 09 se salta las fechas ya procesadas, así que se puede relanzar si se interrumpe.
-- Los avisos `extent will be enlarged` del cubo son normales.
-- Los rásteres por fecha (`data/processed/sentinel2_clases/` y `sentinel2_prueba/`) no se suben al repositorio por su tamaño.
+### Criterios metodológicos
+
+1. Lectura y comprobación de las estructuras de los archivos originales.
+2. Identificación de marcas temporales repetidas.
+3. Eliminación de parejas instante–valor idénticas.
+4. Promedio de valores restantes que comparten una misma marca temporal.
+5. Agregación de Mobrey a niveles medios diarios en UTC.
+6. Integración de ambas series mediante la fecha.
+7. Selección de días con al menos el 80 % de cobertura de Mobrey.
+8. Exclusión del día 4 de julio de 2026 como fecha de transición.
+9. Cálculo de métricas estadísticas antes y después de la discrepancia.
+
+### Resultados de concordancia
+
+| Métrica | Antes del 04/07/2026 | Después del 04/07/2026 |
+|---|---:|---:|
+| Días comparables | 124 | 125 |
+| Spearman | 0,9999182 | -0,2041142 |
+| Pearson | 0,9999433 | -0,2018404 |
+| Diferencia media (m) | -0,005969219 | 13,545941755 |
+| MAE (m) | 0,007191601 | 13,545941755 |
+| RMSE (m) | 0,008190562 | 13,545971825 |
+
+### Interpretación
+
+Antes de la discrepancia, ambos sensores presentan una concordancia muy elevada, con una diferencia absoluta media de aproximadamente 7,19 milímetros.
+
+Después del 4 de julio de 2026 se observa una divergencia persistente entre ambas series, alcanzando una diferencia absoluta media de aproximadamente 13,55 metros.
+
+Estos resultados permiten identificar un periodo que requiere revisión técnica, pero no determinan por sí solos:
+
+- Qué sensor proporciona la medición correcta.
+- La causa instrumental de la discrepancia.
+- La existencia de cambios de configuración o referencia.
+- La exactitud de las mediciones respecto a un patrón externo.
+
+Las métricas representan concordancia entre instrumentos y no exactitud instrumental.
+
+### Comprobación del código
+
+El script `12_comparacion_sensores.R` fue ejecutado correctamente mediante Rscript desde RStudio el 25 de noviembre de 2026, utilizando los dos archivos CSV originales.
+
+La ejecución reprodujo las métricas recogidas en la tabla anterior y generó los archivos derivados sin errores.
+
+Esta comprobación acredita la ejecución del script 12, pero no equivale a una validación científica externa de la metodología ni a la verificación integral de los restantes scripts.
+
+---
+
+## Tecnologías utilizadas
+
+| Área | Herramientas y técnicas |
+|---|---|
+| Programación científica | R |
+| Sistemas de información geográfica | `sf`, `terra` |
+| Procesamiento satelital | Sentinel-2 L2A, `gdalcubes` |
+| Detección de agua | MNDWI |
+| Tratamiento de datos | `dplyr`, R base |
+| Análisis estadístico | Spearman, Pearson, MAE, RMSE |
+| Control de calidad | Cobertura temporal, duplicados, discrepancias |
+| Visualización científica | `ggplot2`, gráficos de R |
+| Control de versiones | Git y GitHub |
+| Ciencia abierta | Zenodo, DOI y ORCID |
 
 ---
 
 ## Estructura del repositorio
 
-```
-.
-├── scripts/                 # 01 a 11, en orden de ejecución
+```text
+donana-hidroperiodo/
+│
+├── scripts/
+│   └── 12_comparacion_sensores.R
+│
 ├── data/
-│   ├── raw/                 # datos originales, sin modificar
-│   └── processed/           # datos derivados (CSV, GeoPackage, GeoTIFF)
-├── figures/                 # mascara_marisma.png, curva_inundacion.png
+│   ├── raw/
+│   │   ├── hidromet_cancela_millan_waterLevel_daily_2026-11-10.csv
+│   │   └── raw-Cancela_Millan-waterLevel_WaterLevelMobrey_Average_20261124 193112.csv
+│   │
+│   └── processed/
+│       ├── comparacion_mestech_mobrey_diaria.csv
+│       └── comparacion_mestech_mobrey_metricas.csv
+│
+├── figures/
+│   ├── curva_inundacion.png
+│   ├── mascara_marisma.png
+│   └── comparacion_mestech_mobrey.png
+│
 ├── docs/
-│   └── fuentes_de_datos.md  # fuentes, licencias, citas y calidad de los datos
+│   └── fuentes_de_datos.md
+│
 └── README.md
 ```
 
+Esquema simplificado de los principales archivos relacionados con el análisis de inundación y el contraste de sensores. Los archivos derivados pueden regenerarse mediante los scripts correspondientes.
+
 ---
 
-## Datos y licencias
+## Scripts del proyecto
 
-| Dato | Fuente | Licencia |
+| Script | Función |
+|---|---|
+| 01 | Descarga de datos |
+| 02 | Limpieza del nivel de agua y marcas de calidad |
+| 03 | Integración de precipitación y nivel de agua |
+| 04 | Descarga mediante la API de Hidromet |
+| 05 | Descarga mediante la API de Meteo Palacio |
+| 06 | Preparación geoespacial de la zona de estudio |
+| 07 | Consulta y selección de escenas Sentinel-2 |
+| 08 | Prueba del cubo de datos y detección de agua |
+| 09 | Generación de la serie temporal satelital |
+| 10 | Máscara de marisma y cálculo de superficie inundada |
+| 11 | Análisis de relaciones hidrometeorológicas |
+| 12 | Comparación Mestech–Mobrey y control de calidad |
+
+---
+
+## Reproducibilidad
+
+### Instalación de dependencias
+
+```r
+install.packages(c(
+  "terra",
+  "sf",
+  "dplyr",
+  "ggplot2",
+  "gdalcubes"
+))
+```
+
+### Procesamiento de la serie satelital
+
+Ejecutar desde la raíz del repositorio, con los datos y productos previos de los scripts 01–08 disponibles:
+
+```r
+source("scripts/09_sentinel2_serie.R")
+source("scripts/10_mascara_marisma.R")
+source("scripts/11_cruce_inundacion_lluvia_nivel.R")
+```
+
+El script 09 permite reanudar el procesamiento sin repetir las fechas ya procesadas.
+
+Los rásteres intermedios de cada fecha no se incluyen en el repositorio debido a su tamaño.
+
+### Reproducción del análisis de sensores
+
+El script 12 utiliza exclusivamente funciones de R base y no requiere instalar paquetes adicionales.
+
+Los archivos CSV originales deben estar disponibles en `data/raw/`.
+
+Desde una terminal situada en la raíz del proyecto:
+
+```bash
+Rscript scripts/12_comparacion_sensores.R "data/raw/hidromet_cancela_millan_waterLevel_daily_2026-11-10.csv" "data/raw/raw-Cancela_Millan-waterLevel_WaterLevelMobrey_Average_20261124 193112.csv"
+```
+
+Alternativamente, desde la consola de RStudio:
+
+```r
+script <- "scripts/12_comparacion_sensores.R"
+
+mestech <- paste0(
+  "data/raw/",
+  "hidromet_cancela_millan_waterLevel_daily_2026-11-10.csv"
+)
+
+mobrey <- paste0(
+  "data/raw/",
+  "raw-Cancela_Millan-waterLevel_WaterLevelMobrey_Average_20261124 193112.csv"
+)
+
+stopifnot(file.exists(script, mestech, mobrey))
+
+rscript <- file.path(
+  R.home("bin"),
+  if (.Platform$OS.type == "windows") {
+    "Rscript.exe"
+  } else {
+    "Rscript"
+  }
+)
+
+status <- system2(
+  rscript,
+  args = shQuote(c(script, mestech, mobrey))
+)
+
+stopifnot(status == 0)
+```
+
+Si los archivos se han guardado con nombres diferentes, deberán ajustarse las rutas.
+
+El script recibe dos archivos de entrada como argumentos, por lo que no debe ejecutarse directamente mediante `source()`.
+
+### Salidas generadas
+
+| Archivo | Contenido |
+|---|---|
+| `comparacion_mestech_mobrey_diaria.csv` | Serie diaria integrada, diferencias, cobertura y marcas de comparabilidad |
+| `comparacion_mestech_mobrey_metricas.csv` | Métricas estadísticas por periodo |
+| `comparacion_mestech_mobrey.png` | Visualización comparativa |
+
+Los datos originales permanecen sin modificaciones. La ejecución puede sobrescribir los productos derivados y generar una gráfica con un formato visual diferente a la figura de presentación.
+
+---
+
+## Fuentes de datos
+
+| Fuente | Información utilizada | Licencia |
 |---|---|---|
-| Nivel de agua, estación Cancela Millán | ICTS-RBD / EBD-CSIC, Hidromet | CC BY 4.0 |
-| Precipitación diaria, estación Palacio | ICTS-RBD / EBD-CSIC, Meteo Palacio | CC BY 4.0 |
-| Límite de la zona de estudio | REDIAM, Junta de Andalucía | CC BY 4.0 |
-| Imágenes Sentinel-2 L2A | Copernicus (ESA), vía Microsoft Planetary Computer | Acceso libre y abierto |
+| Copernicus Sentinel-2 | Imágenes multiespectrales L2A | Acceso libre y abierto |
+| Microsoft Planetary Computer | Catálogo y acceso a imágenes | Según licencia de los datos originales |
+| ICTS-RBD / EBD-CSIC — Hidromet | Nivel de agua y sensores | CC BY 4.0 |
+| ICTS-RBD / EBD-CSIC — Meteo Palacio | Precipitación diaria | CC BY 4.0 |
+| REDIAM — Junta de Andalucía | Límites geográficos | CC BY 4.0 |
 
-Las citas completas, las fechas de descarga y las condiciones de reutilización están en [`docs/fuentes_de_datos.md`](docs/fuentes_de_datos.md).
+### Datos originales de los sensores
 
-**Atribución:** contiene datos Copernicus Sentinel-2 (ESA). Los datos hidrometeorológicos pertenecen a la ICTS-RBD / EBD-CSIC y se reutilizan citando la fuente, indicando la fecha de consulta y sin alterar el sentido de la información.
+| Instrumento | Variable | Fecha de descarga |
+|---|---|---|
+| Mestech | WL_X1 | 10/11/2026 |
+| Mobrey | WL_X2 | 24/11/2026 |
+
+Los archivos originales conservan sus cabeceras, metadatos y condiciones de reutilización.
+
+La cabecera de Mobrey no contiene una identificación explícita de la estación ni sus coordenadas. Su asociación con Cancela Millán procede del nombre del archivo suministrado y queda pendiente de confirmación técnica.
+
+Los datos hidrometeorológicos se atribuyen a la ICTS-RBD / Estación Biológica de Doñana (EBD-CSIC).
+
+- [Estación Biológica de Doñana](https://www.ebd.csic.es/)
+- [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/)
+- [Copernicus](https://www.copernicus.eu/)
+- [Licencia CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- [Documentación de fuentes de datos](docs/fuentes_de_datos.md)
 
 ---
 
-## Próximos pasos
+## Limitaciones
 
-- Densificar la serie con una fecha cada 10 días entre enero y abril para ver cuándo sube la marisma.
-- Probar la máscara con un umbral de 0,05 en lugar de 0,10 y comprobar si cambia la curva.
-- Ampliar el periodo hacia atrás (2018 en adelante) según la disponibilidad de Sentinel-2 L2A.
-- Contrastar la hipótesis del terreno empapado con datos de suelo o de acuífero.
-- Incorporar precipitación regional (AEMET OpenData) para no depender de una sola estación.
+- La serie satelital tiene carácter piloto y una resolución temporal aproximada de una observación mensual.
+- El número reducido de observaciones limita la capacidad de inferencia estadística.
+- La autocorrelación temporal puede afectar a la interpretación de las correlaciones.
+- El umbral MNDWI utilizado requiere calibración y validación espacial independiente.
+- La máscara estacional se construye a partir de las mismas observaciones utilizadas en el análisis.
+- Una única estación de precipitación y una de nivel de agua no representan necesariamente toda la marisma.
+- La serie de nivel presenta un hueco entre el 14/05/2025 y el 15/01/2026.
+- Las reglas de tratamiento de duplicados y cobertura temporal son exploratorias.
+- La comparación de sensores no permite identificar de manera concluyente el origen de la discrepancia observada.
+- Las superficies calculadas no constituyen delimitaciones administrativas oficiales.
+
+---
+
+## Próximas líneas de desarrollo
+
+- Ampliación y densificación temporal de la serie Sentinel-2.
+- Análisis de sensibilidad de los umbrales de frecuencia de inundación.
+- Evaluación de diferentes umbrales MNDWI.
+- Contraste espacial mediante observaciones de campo.
+- Integración de información procedente de fenocámaras.
+- Incorporación de variables edáficas e hidrogeológicas.
+- Integración de precipitación regional.
+- Desarrollo de indicadores automatizados de calidad de datos.
+- Revisión técnica de las discrepancias entre sensores.
+- Desarrollo de procedimientos de monitorización ambiental reproducibles.
+
+---
+
+## Ciencia abierta
+
+El proyecto dispone de una versión archivada en Zenodo con identificador DOI permanente.
+
+| Información | Detalle |
+|---|---|
+| Tipo de recurso | Software |
+| Versión archivada | v1.0.0 |
+| Fecha de publicación | 25 de noviembre de 2026 |
+| Repositorio científico | Zenodo |
+| Acceso | Abierto |
+| Licencia del código | MIT |
+| Indexación indicada por Zenodo | OpenAIRE |
+
+[![Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.24519541.svg)](https://doi.org/10.5281/zenodo.24519541)
+
+El DOI de versión identifica el contenido archivado en el momento de publicación. Las actualizaciones posteriores de GitHub no modifican automáticamente dicha versión.
+
+- **DOI de la versión v1.0.0:** [10.5281/zenodo.24519541](https://doi.org/10.5281/zenodo.24519541)
+- **DOI de todas las versiones:** [10.5281/zenodo.24519540](https://doi.org/10.5281/zenodo.24519540)
+
+---
+
+## Cómo citar este proyecto
+
+Fuentes Moreno, A. (2026). *FuentesAntro/donana-hidroperiodo: Doñana Hydroperiod v1.0.0 — Reproducible Remote Sensing and Hydrometeorological Data Analysis* (Version v1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.24519541
+
+### BibTeX
+
+```bibtex
+@software{fuentes_moreno_2026_donana,
+  author    = {Fuentes Moreno, Antonio},
+  title     = {Doñana Hydroperiod v1.0.0 —
+               Reproducible Remote Sensing and
+               Hydrometeorological Data Analysis},
+  year      = {2026},
+  version   = {v1.0.0},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.24519541},
+  url       = {https://doi.org/10.5281/zenodo.24519541}
+}
+```
+
+---
+
+## Licencia y atribución
+
+El código original del proyecto se distribuye bajo licencia MIT.
+
+Los datos procedentes de terceros conservan sus respectivas licencias y condiciones de reutilización.
+
+Los productos derivados de los datos hidrometeorológicos incluyen transformaciones documentadas, como tratamiento de duplicados, agregación diaria, integración temporal y cálculo de métricas.
+
+**Atribución:** contiene datos Copernicus Sentinel-2, datos hidrometeorológicos de la ICTS-RBD / EBD-CSIC e información geográfica procedente de REDIAM.
+
+Este proyecto es una iniciativa independiente de carácter científico-técnico y exploratorio. No constituye un producto oficial de la Estación Biológica de Doñana (CSIC) ni una publicación revisada por pares.
 
 ---
 
 ## Autor
 
-**Antonio Fuentes Moreno** · Antropología Social y Cultural (Universidad de Sevilla) · Máster en Ciencia de Datos Aplicada a las Ciencias Sociales (USAL-UGR)
+### Antonio Fuentes Moreno
 
-[GitHub](https://github.com/FuentesAntro) · [LinkedIn](https://www.linkedin.com/in/antonio-fuentes-moreno-9a08341a5/)
+**Ciencia de datos aplicada | Análisis geoespacial | Teledetección | Investigación ambiental**
+
+- Graduado en Antropología Social y Cultural — Universidad de Sevilla.
+- Máster en Ciencia de Datos Aplicada a las Ciencias Sociales — Universidad de Salamanca y Universidad de Granada (en curso).
+- Intereses: análisis de datos ambientales, sistemas de información geográfica, programación científica, calidad de datos y ciencia abierta.
+
+[![GitHub](https://img.shields.io/badge/GitHub-FuentesAntro-181717?logo=github)](https://github.com/FuentesAntro)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Antonio%20Fuentes-0A66C2?logo=linkedin)](https://www.linkedin.com/in/antonio-fuentes-moreno-9a08341a5/)
+[![ORCID](https://img.shields.io/badge/ORCID-0009--0006--1203--1797-A6CE39?logo=orcid&logoColor=white)](https://orcid.org/0009-0006-1203-1797)
+[![Zenodo](https://img.shields.io/badge/Zenodo-Software-1682D4)](https://doi.org/10.5281/zenodo.24519541)
+
+---
+
+<p align="center">
+  <strong>Open Science · Environmental Data Science · Reproducible Research</strong>
+</p>
+<p align="center">
+  Doñana, Andalucía, España · 2026
+</p>
